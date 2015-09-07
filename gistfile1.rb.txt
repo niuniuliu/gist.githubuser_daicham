@@ -1,0 +1,24 @@
+# encoding: utf-8
+#
+# Prerequisite:
+#   gem install ruby-oci8
+
+require 'oci8'
+
+def log(message)
+  puts "#{Time.now.strftime("%Y-%m-%d %H:%M:%S")} #{message}"
+end
+
+log "connecting..."
+conn = OCI8.new("hoge", "hoge_passwd", "//localhost/db")
+log "connected."
+
+begin
+  num = conn.exec("insert into ...")
+  conn.commit
+  log "#{num} inserted."
+ensure
+  log 'logging off...'
+  conn.logoff
+  log 'logged off.'
+end

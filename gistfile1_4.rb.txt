@@ -1,0 +1,18 @@
+require 'win32ole'
+
+def each_meeting
+  ol = WIN32OLE.connect("Outlook.Application")
+  myNameSpace = ol.getNameSpace("MAPI")
+  folder = myNameSpace.GetDefaultFolder(9) # 9 は予定表
+  #folder.Display
+  folder.Items.each do |meeting|
+    GC.start
+    yield meeting
+  end
+end
+
+each_meeting do |m|
+  m.Recipients.each do |i|
+    puts m.Subject + ":" + m.Start + "-" + m.End + "@" + m.Location + ":" + m.Duration.to_s + ":" + m.Body + ":" +  i.Name
+  end
+end

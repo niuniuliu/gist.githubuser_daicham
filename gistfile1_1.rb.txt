@@ -1,0 +1,49 @@
+def print_tree(base_dir)
+  base_dir = base_dir + '/' unless base_dir.end_with? '/'
+  size = 0
+  Dir.glob("#{base_dir}*/") do |dir|
+    #puts "entering #{dir}"
+    size += print_tree dir
+  end
+  Dir.glob("#{base_dir}*") do |file|
+    real_size = File.size file
+    size += compute_actual_size real_size
+    #puts "#{file} : #{File.size file}"
+  end
+  puts "#{base_dir}:#{h size}"
+  size
+end
+
+BLOCK_SIZE = 1024
+
+def compute_actual_size real_size
+  real_size % BLOCK_SIZE == 0 ?
+    real_size :
+    real_size - (real_size % BLOCK_SIZE) + BLOCK_SIZE
+end
+
+def h(bytes, count=0)
+  #puts bytes, count
+  if bytes >= 1024
+    h(bytes / 1024.0, count+1)
+  else
+    case count
+      when 0
+        "%#.2f bytes" % bytes
+      when 1
+        "%#.2f KB" % bytes
+      when 2
+        "%#.2f MB" % bytes
+      when 3
+        "%#.2f GB" % bytes
+      when 4
+        "%#.2f TB" % bytes
+      else
+        "unknown"
+    end
+  end
+end
+
+$*.each do |arg|
+  print_tree arg
+end

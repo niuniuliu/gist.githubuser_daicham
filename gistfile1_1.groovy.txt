@@ -1,0 +1,30 @@
+//Dump from mysql
+/* dump ファイルが文字化けしたので コマンドラインから sqldump したほうがよさそう
+def mysqldump_process = "/path/to/mysqldump -u redmine -psecret redmine".execute()
+new File("redmine.dump").withWriter { writer ->
+  writer << mysqldump_process.text
+}
+*/
+
+//Archive dump and attachedfiles
+new AntBuilder().zip(destfile: "path/to/backup/redmine-backup." + new Date().format("yyyyMMddHHmmss") + ".zip",
+    basedir: ".",
+    includes: "*.dump") {
+  fileset(dir: "/path/to/redmine") {
+    include(name: "files/*")
+  }
+}
+
+//Number of keeping backup archive
+def KEEP_NUM = 7
+def c = 0;
+
+def files = new File("path/to/backup").listFiles().reverse()
+files.each {
+  if (c++ < KEEP_NUM) {
+    println "Kept${it.canonicalPath}"
+  } else {
+    it.delete()
+    println "Deleted .${it.canonicalPath}"
+  }
+}

@@ -1,0 +1,22 @@
+//all job name
+jenkins.model.Jenkins.instance.items.each {
+  println "Job: ${it.name}"
+}
+
+//method list of Jenkins instance
+jenkins.model.Jenkins.instance.class.methods.each {
+  println "Jenkins method: ${it.name}"
+}
+
+//method list of Maven2job(hudson.maven.MavenModuleSet)
+hudson.maven.MavenModuleSet.class.methods.each {
+  println "job method: ${it.name}"
+}
+
+//method list of Free Style Project(hudson.model.FreeStyleProject)
+hudson.model.FreeStyleProject.class.methods.each {
+  println "job method : ${it.name}"
+}
+
+//workspace path of specified job
+println(jenkins.model.Jenkins.instance.getJob("jobName").getWorkspace())

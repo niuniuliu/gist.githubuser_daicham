@@ -1,0 +1,38 @@
+require 'win32ole'
+require 'kconv'
+require 'csv'
+require 'date'
+
+class Ticket
+  attr_reader :id
+  attr_reader :subject
+  attr_reader :from
+  attr_reader :to
+  def initialize(a)
+    @id = a[0]
+    @subject = "#" + @id + ":" + a[1]
+    @from = DateTime.parse(a[2] + " 10:30")
+    @to = @from + Rational(1, 24/a[3].to_f)
+  end
+  def send
+    ol = WIN32OLE.connect("Outlook.Application")
+    myNameSpace = ol.getNameSpace("MAPI")
+    folder = myNameSpace.GetDefaultFolder(9) # 9 は予定表
+    appo = nil
+    folder.Items.each do |a|
+      appo = a if a.Subject == @subject
+    end
+    appo = ol.CreateItem(1) unless appo
+    appo.Subject = @subject
+    appo.Start = @from.strftime("%Y-%m-%d %H:%M:%S")
+    appo.End = @to.strftime("%Y-%m-%d %H:%M:%S")
+    appo.save
+  end
+  def to_s
+    "#" + @id + ":" + @subject + ":" + @from
+  end
+end
+
+CSV.open('test.csv', 'r') do |row|
+  Ticket.new(row).send
+end

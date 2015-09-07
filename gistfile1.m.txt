@@ -1,0 +1,9 @@
+//refs http://d.hatena.ne.jp/thata/20100213/1265987041 
+   UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:@"hoge"
+                          message:textfield.text
+                          delegate: nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil];
+    [alert show];
+    [alert release];

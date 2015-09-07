@@ -1,0 +1,25 @@
+require 'rubygems'
+require 'icalendar'
+require 'date'
+
+cal = Icalendar::Calendar.new
+cal.event do
+  dtstart  DateTime.new(2010, 05, 19, 22, 00), {'TZID' => 'Asis/Tokyo'}
+  dtend    DateTime.new(2010, 05, 19, 22, 30), {'TZID' => 'Asis/Tokyo'}
+  summary  "うちあわせ"
+end
+cal.event do
+  dtstart  DateTime.new(2010, 05, 20, 22, 00), {'TZID' => 'Asis/Tokyo'}
+  dtend    DateTime.new(2010, 05, 20, 22, 30), {'TZID' => 'Asis/Tokyo'}
+  summary  "うちあわせ2"
+end
+cal.timezone do
+  tzid  "Asia/Tokyo"
+  standard do
+    tzoffsetfrom "+0900"
+    tzoffsetto   "+0900"
+  end
+end
+cal.publish
+
+puts cal.to_ical

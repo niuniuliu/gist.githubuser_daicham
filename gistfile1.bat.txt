@@ -1,0 +1,10 @@
+@echo off
+ruby -S -x %0 %*
+goto end
+#! ruby
+
+# some ruby code
+
+__END__
+:end
+pause

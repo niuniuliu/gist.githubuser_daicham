@@ -1,0 +1,31 @@
+function zip ($zipFilePath, $targetDir) {
+  # load Ionic.Zip.dll 
+  [System.Reflection.Assembly]::LoadFrom(path\to\Ionic.Zip.dll)
+  $encoding = [System.Text.Encoding]::GetEncoding("shift_jis") # 日本語のファイルを扱うために必要
+  $zipfile =  new-object Ionic.Zip.ZipFile($encoding)
+
+  $zipfile.AddDirectory($targetDir)
+
+  if (!(test-path (split-path $zipFilePath -parent))) {
+    mkdir (split-path $zipFilePath -parent)
+  }
+  write-host "Saving... zip file from $targetDir"
+  $zipfile.Save($zipFilePath)
+  $zipfile.Dispose()
+  write-host "Saved."
+}
+
+function unzip ($zipFilePath, $targetDir) {
+  # load Ionic.Zip.dll
+  [System.Reflection.Assembly]::LoadFrom(path\to\Ionic.Zip.dll)
+  $encoding = [System.Text.Encoding]::GetEncoding("shift_jis") # 日本語のファイルを扱うために必要
+  $zipfile =  new-object Ionic.Zip.ZipFile($encoding)
+
+  if (!(test-path (split-path $targetDir -parent))) {
+    mkdir (split-path $targetDir -parent)
+  }
+  write-host "Extracting... zip file[$zipFilePath] to $targetDir"
+  $zip = [Ionic.Zip.ZIPFile]::Read($zipFilePath, $encoding)
+  $zip | %{$_.Extract($targetDir, [Ionic.Zip.ExtractExistingFileAction]::OverWriteSilently)}
+  write-host "Extracted."
+}

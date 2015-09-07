@@ -1,0 +1,14 @@
+@echo off
+ruby -S -x %0 %*
+goto end
+
+#! ruby
+require 'win32/clipboard' # before install "win32-clipboard" gem
+pattern = ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a
+puts "Random String => " + Array.new(8){pattern[rand(pattern.size)]}.join
+Win32::Clipboard.set_data(value, Win32::Clipboard::UNICODETEXT)
+puts "Stored to clipboard"
+__END__
+
+:end
+pause

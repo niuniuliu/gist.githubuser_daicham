@@ -1,0 +1,17 @@
+// Proxy 設定は %USERPROFILE%\.groovy\preinit.bat に JAVA_OPTS として記述する。
+// ex.)
+//   set JAVA_OPTS=%JAVA_OPTS% -Dhttp.proxyHost=proxyserver -Dhttp.proxyPort=8080 -Dhttp.proxyUser=username -Dhttp.proxyPassword=secret
+//   set JAVA_OPTS=%JAVA_OPTS% -Dhttps.proxyHost=proxyserver -Dhttps.proxyPort=8080 -Dhttps.proxyUser=username -Dhttps.proxyPassword=secret
+
+@GrabResolver(name="kobo", root="https://repository-kobo.forge.cloudbees.com/release")
+@Grab("org.jggug.kobo:gexcelapi:0.3")
+import org.jggug.kobo.gexcelapi.GExcel
+
+def book = GExcel.open(args[0])
+
+book.sheets.each { //シートのループ
+  println it.sheetName
+  it._1.each { //1行目のセル分ループ
+    println "  ${it.value}"
+  }
+}
